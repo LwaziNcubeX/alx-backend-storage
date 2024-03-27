@@ -4,8 +4,24 @@ Writing strings to Redis
 """
 import typing
 import uuid
+from functools import wraps
 from typing import Union
 import redis
+
+
+def count_calls(method: typing.Callable) -> typing.Callable:
+    """
+    Decorator to count how many times a method call is made
+    :param method:
+    :return:
+    """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key = f"{self.__class__.__qualname__}.{method.__name__}"
+        r = redis.Redis()
+        r.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -16,6 +32,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         generate and set a unique key for each data
