@@ -16,11 +16,11 @@ def count_calls(method: typing.Callable) -> typing.Callable:
     :return:
     """
     @wraps(method)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self, *args, **kwds):
         key = f"{self.__class__.__qualname__}.{method.__name__}"
         r = redis.Redis()
         r.incr(key)
-        return method(self, *args, **kwargs)
+        return method(self, *args, **kwds)
     return wrapper
 
 
