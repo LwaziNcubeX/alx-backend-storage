@@ -2,6 +2,8 @@
 """
 provides some stats about Nginx logs stored in MongoDB
 """
+from collections import Counter
+
 from pymongo import MongoClient
 
 
@@ -29,6 +31,13 @@ def log_stats():
           f"\tmethod PATCH: {total_patch}\n"
           f"\tmethod DELETE: {total_delete}\n"
           f"{total_status} status check")
+
+    ip_counts = Counter(doc['ip'] for doc in collection.find())
+    top_ips = ip_counts.most_common(10)
+
+    print("IPs:")
+    for ip, count in top_ips:
+        print(f"\t{ip}: {count}")
 
 
 if __name__ == "__main__":
