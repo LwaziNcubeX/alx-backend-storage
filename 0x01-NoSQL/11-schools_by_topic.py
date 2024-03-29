@@ -11,6 +11,6 @@ def schools_by_topic(mongo_collection, topic):
     :param topic:
     :return:
     """
-    query = {"topic": topic}
-    result = mongo_collection.find({}, query)
+    query = {"topics": topic}
+    result = mongo_collection.find(query)
     return result
