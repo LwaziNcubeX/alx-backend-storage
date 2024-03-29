@@ -14,4 +14,4 @@ def update_topics(mongo_collection, name, topics):
     """
     name = {"name": name}
     set_values = {"$set": {"topics": topics}}
-    mongo_collection.update_one(name, set_values)
+    mongo_collection.update_many(name, set_values)
